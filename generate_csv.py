@@ -31,10 +31,12 @@ class CreateCsv:
         #below table_response["TableList"] is list of dictionaries,
         #each dictionary contains one table information
         for item in table_response["TableList"]:  #item has table details as dict
+            if not item["StorageDescriptor"].get("Location"):
+                continue
             tmp_dict = {
                 "table_name": item["Name"],
                 "database_name": item["DatabaseName"],
-                "crawler_name": item["Parameters"]["UPDATED_BY_CRAWLER"],
+                "crawler_name": item["Parameters"].get("UPDATED_BY_CRAWLER",""),
                 "s3_path": item["StorageDescriptor"]["Location"],
             }
             row_list.append(tmp_dict)
